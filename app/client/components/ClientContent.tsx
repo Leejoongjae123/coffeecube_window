@@ -14,12 +14,7 @@ interface ClientContentProps {
 
 export default function ClientContent({ user }: ClientContentProps) {
   const router = useRouter();
-  // 임시 데이터 - 실제로는 API에서 가져와야 함
-  const userStats: UserStatsType = {
-    totalInput: "15kg",
-    todayInput: "0.5kg",
-    myPoints: "147p"
-  };
+
   const handleSettingsClick = () => {
     router.push("/master");
   };
@@ -27,8 +22,17 @@ export default function ClientContent({ user }: ClientContentProps) {
   return (
     <div className="relative flex flex-col items-center justify-start h-screen">
       {/* 설정 버튼 */}
-      <Button className="absolute bottom-10 left-20 w-20 h-20 bg-[#CECECE] rounded-[20px]" onClick={handleSettingsClick}>
-        <Image src="/mdi_gear.svg" alt="settings" width={32} height={32} className="text-white" />
+      <Button
+        className="absolute bottom-10 left-20 w-20 h-20 bg-[#CECECE] rounded-[20px]"
+        onClick={handleSettingsClick}
+      >
+        <Image
+          src="/mdi_gear.svg"
+          alt="settings"
+          width={32}
+          height={32}
+          className="text-white"
+        />
       </Button>
 
       {/* 상단 이미지 */}
@@ -38,13 +42,13 @@ export default function ClientContent({ user }: ClientContentProps) {
 
       {/* 메인 콘텐츠 */}
       <div className="flex-1 w-full mt-10 px-20">
-        <div className="w-full h-[810px] px-11 py-20 bg-[#F4F4F4] rounded-[16px]">
+        <div className="w-full h-[840px] px-11 py-20 bg-[#F4F4F4] rounded-[16px]">
           {/* 환영 메시지 */}
           <WelcomeMessage user={user} />
-          
+
           {/* 사용자 통계 */}
-          <UserStats stats={userStats} />
-          
+          <UserStats />
+
           {/* 액션 버튼들 */}
           <ActionButtons />
         </div>

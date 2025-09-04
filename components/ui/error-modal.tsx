@@ -5,11 +5,23 @@ import * as React from "react";
 interface ErrorModalProps {
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
+  message?: string;
 }
 
 const ErrorModal = React.forwardRef<HTMLDivElement, ErrorModalProps>(
-  ({ isOpen, onClose }, ref) => {
-    if (!isOpen) return null;
+  (
+    {
+      isOpen,
+      onClose,
+      title = "오류 발생",
+      message = "작업 실행 중 오류가 발생했습니다.\n같은 문제가 반복된다면, 관리자에게 문의해주세요.",
+    },
+    ref
+  ) => {
+    if (!isOpen) {
+      return null;
+    }
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -27,7 +39,7 @@ const ErrorModal = React.forwardRef<HTMLDivElement, ErrorModalProps>(
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className="alert-icon"
-                  style={{ width: '120px', height: '120px' }}
+                  style={{ width: "120px", height: "120px" }}
                 >
                   <path
                     fillRule="evenodd"
@@ -39,12 +51,15 @@ const ErrorModal = React.forwardRef<HTMLDivElement, ErrorModalProps>(
               </div>
               <div className="flex flex-col gap-3 justify-center items-center w-full">
                 <div className="text-3xl font-bold text-center text-neutral-600 max-md:text-3xl max-sm:text-2xl">
-                  오류 발생
+                  {title}
                 </div>
                 <div className="text-base font-semibold leading-6 text-center text-neutral-400 max-md:text-base max-md:leading-6 max-sm:text-sm max-sm:leading-5">
-                  작업 실행 중 오류가 발생했습니다.
-                  <br />
-                  같은 문제가 반복된다면, 관리자에게 문의해주세요.
+                  {message.split("\n").map((line, index) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index < message.split("\n").length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
             </div>

@@ -37,7 +37,9 @@ function LoginMethods({ activeButton }: LoginMethodsProps) {
       // 로그인 성공 시 /client로 리다이렉트
       router.push("/client");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다.");
+      setError(
+        err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -54,10 +56,47 @@ function LoginMethods({ activeButton }: LoginMethodsProps) {
         </div>
         <div className="mt-5 w-full max-md:mt-10 max-md:max-w-full">
           <div
-            className="text-xl max-md:max-w-full"
+            className="text-xl mb-6 max-md:max-w-full"
             data-name="스마트폰을 통해 앱 로그인 후, 생성된 바코드를 화면 하단의 바코드리더기에 스캔해주세요."
           >
-            스마트폰을 통해 앱 로그인 후, 생성된 바코드를 화면 하단의 바코드리더기에 스캔해주세요.
+            스마트폰을 통해 앱 로그인 후, 생성된 바코드를 화면 하단의
+            바코드리더기에 스캔해주세요.
+          </div>
+
+          {/* 아이디/비밀번호 로그인 섹션 추가 */}
+          <div className="">
+            <form onSubmit={handleLogin}>
+              <div className="flex gap-4 mb-6">
+                <Input
+                  type="email"
+                  placeholder="   이메일"
+                  className="flex-1 h-12 text-lg bg-white"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  type="password"
+                  placeholder="   비밀번호"
+                  className="flex-1 h-12 text-lg bg-white"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              {error && (
+                <div className="mb-4 p-3 text-red-600 bg-red-50 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
+              <Button
+                type="submit"
+                className="w-full h-[82px] text-[24px] font-bold bg-primary hover:bg-primary/90"
+                disabled={isLoading}
+              >
+                {isLoading ? "로그인 중..." : "로그인"}
+              </Button>
+            </form>
           </div>
         </div>
       </div>
@@ -93,7 +132,7 @@ function LoginMethods({ activeButton }: LoginMethodsProps) {
               />
               <Input
                 type="password"
-                placeholder="   비밀번호" 
+                placeholder="   비밀번호"
                 className="flex-1 h-12 text-lg bg-white"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -105,7 +144,7 @@ function LoginMethods({ activeButton }: LoginMethodsProps) {
                 {error}
               </div>
             )}
-            <Button 
+            <Button
               type="submit"
               className="w-full h-[82px] text-[24px] font-bold bg-primary hover:bg-primary/90"
               disabled={isLoading}
