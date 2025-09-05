@@ -25,6 +25,7 @@ export default function ActionButtons() {
           input_type: inputType,
           input_amount: amount,
           input_date: new Date().toISOString().split("T")[0],
+          robot_code: "123123",
         }),
       });
 

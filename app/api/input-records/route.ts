@@ -18,7 +18,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { equipment_command_id, input_amount, input_type, input_date } = body;
+    const {
+      equipment_command_id,
+      input_amount,
+      input_type,
+      input_date,
+      robot_code,
+    } = body;
 
     // 필수 필드 검증
     if (!input_amount || !input_type) {
@@ -61,36 +67,6 @@ export async function POST(request: NextRequest) {
     // 새로운 투입 후 총량 계산
     const newTotalAmount = todayTotalAmount + Number(input_amount);
 
-    // 2.5kg 제한 검증
-    if (newTotalAmount > 2.5) {
-      const remainingAmount = 2.5 - todayTotalAmount;
-      if (remainingAmount <= 0) {
-        return NextResponse.json(
-          {
-            error: "오늘 투입 한도를 초과했습니다",
-            message:
-              "오늘은 이미 2kg를 모두 투입하였습니다.\n내일 다시 시도해주세요.",
-            dailyLimit: 2.5,
-            currentTotal: todayTotalAmount,
-            requestedAmount: Number(input_amount),
-          },
-          { status: 400 }
-        );
-      } else {
-        return NextResponse.json(
-          {
-            error: "일일 투입량 초과",
-            message: `오늘 투입 가능한 양은 ${remainingAmount}kg입니다.\n현재까지 투입량: ${todayTotalAmount}kg\n요청 투입량: ${input_amount}kg`,
-            dailyLimit: 2.5,
-            currentTotal: todayTotalAmount,
-            requestedAmount: Number(input_amount),
-            remainingAmount: remainingAmount,
-          },
-          { status: 400 }
-        );
-      }
-    }
-
     // 투입 기록 생성
     const { data, error } = await supabase
       .from("input_records")
@@ -100,6 +76,7 @@ export async function POST(request: NextRequest) {
         input_amount,
         input_type,
         input_date: today,
+        robot_code: robot_code || null,
       })
       .select()
       .single();
@@ -109,6 +86,25 @@ export async function POST(request: NextRequest) {
         { error: "투입 기록 생성에 실패했습니다." },
         { status: 500 }
       );
+    }
+
+    // robot_code가 있는 경우 equipment_list의 last_used_at 업데이트
+    if (robot_code) {
+      const { error: equipmentUpdateError } = await supabase
+        .from("equipment_list")
+        .update({
+          last_used_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("robot_code", robot_code);
+
+      // equipment_list 업데이트 실패는 로그만 남기고 계속 진행
+      if (equipmentUpdateError) {
+        console.log(
+          "Equipment last_used_at 업데이트 실패:",
+          equipmentUpdateError
+        );
+      }
     }
 
     // equipment_status 테이블에 장비명령 기록 저장

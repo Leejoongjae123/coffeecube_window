@@ -223,35 +223,7 @@ export default function DashboardPanel() {
           </div>
 
           {/* 최근 명령 기록 */}
-          {(equipmentData.action_name || equipmentData.action_response) && (
-            <div className="flex flex-col gap-4 w-full mt-6 p-6 bg-white rounded-xl">
-              <div className="text-2xl font-bold text-neutral-800 mb-2">
-                최근 장비 명령
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {equipmentData.action_name && (
-                  <div className="flex flex-col gap-2">
-                    <div className="text-lg font-semibold text-gray-600">
-                      명령
-                    </div>
-                    <div className="p-3 bg-gray-100 rounded-lg text-lg font-medium">
-                      {equipmentData.action_name}
-                    </div>
-                  </div>
-                )}
-                {equipmentData.action_response && (
-                  <div className="flex flex-col gap-2">
-                    <div className="text-lg font-semibold text-gray-600">
-                      응답
-                    </div>
-                    <div className="p-3 bg-green-100 rounded-lg text-lg font-medium text-green-800">
-                      {equipmentData.action_response}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+         
         </>
       ) : (
         <div className="grid grid-cols-3 gap-4 w-full max-md:grid-cols-2 max-sm:grid-cols-1">
